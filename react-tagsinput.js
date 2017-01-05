@@ -274,8 +274,10 @@
         var _props = this.props,
             validationRegex = _props.validationRegex,
             onChange = _props.onChange,
+            onValidationReject = _props.onValidationReject,
             onlyUnique = _props.onlyUnique,
             maxTags = _props.maxTags,
+            rejectedTags = _props.rejectedTags,
             value = _props.value;
 
 
@@ -288,6 +290,9 @@
           });
         }
 
+        rejectedTags = tags.filter(function (tag) {
+          return !validationRegex.test(_this2._getTagDisplayValue(tag));
+        });
         tags = tags.filter(function (tag) {
           return validationRegex.test(_this2._getTagDisplayValue(tag));
         });
@@ -303,6 +308,10 @@
         if (maxTags >= 0) {
           var remainingLimit = Math.max(maxTags - value.length, 0);
           tags = tags.slice(0, remainingLimit);
+        }
+
+        if (onValidationReject && rejectedTags.length > 0) {
+          onValidationReject(rejectedTags);
         }
 
         if (tags.length > 0) {
